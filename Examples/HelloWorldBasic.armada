@@ -1,0 +1,4 @@
+namespace ArmadaApp1;
+
+let hello = "Hello World";
+writeln @hello;

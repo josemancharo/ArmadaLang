@@ -1,0 +1,5 @@
+{
+    "files.associations": {
+        "*.armada": "dotnet-interactive.fsharp"
+    }
+}

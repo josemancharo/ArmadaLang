@@ -1,0 +1,11 @@
+namespace ArmadaApp1;
+
+internal class Program {
+    #entrypoint
+    method Main of @args:string[] is void {
+        % This code prints hello world to the console
+        
+        let hello = "Hello World";
+        writeln @hello;
+    }
+}
