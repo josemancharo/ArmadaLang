@@ -1,0 +1,8 @@
+{
+  "profiles": {
+    "ArmadaLang.Console": {
+      "commandName": "Project",
+      "commandLineArgs": "\"C:\\Users\\josem\\source\\repos\\ArmadaLang\\Examples\\HelloWorldBasic.armada\""
+    }
+  }
+}

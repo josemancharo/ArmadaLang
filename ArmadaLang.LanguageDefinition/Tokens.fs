@@ -1,23 +1,45 @@
 ﻿namespace ArmadaLang.LanguageDefinition
 
-open System.Collections.Generic
-
 module Tokens = 
-    type Token =
+    type Statement =
     | CompilerError = -1
-    | AssignmentOperator = 0
-    | StringLiteral = 1
-    | WriteFunction = 2
-    | IntegerLiteral = 3
-    | FloatLiteral = 4
-    | Reference = 5
-    | VariableDefinition = 6
-    | NamespaceImport = 7
-    | EndOfStatement = 8
-    | NamespaceDeclaration = 9
+    | NamespaceDeclaration = 0
+    | NamespaceImport = 1
+    | ClassDeclaration = 2
+    | MethodDeclaration = 3
+    | FieldDeclaration = 4
+    | VariableDeclaration = 5
+    | WriteLn = 6
+    | MethodInvocation = 7
+    | CommentLine = 8
+    | EntrypointMethodDeclaration = 9
 
-    let IgnoreSpacesBetween = [|
+    type Expression =
+    | CompilerError = -1
+    | NumericLiteral = 0
+    | FloatLiteral = 1
+    | StringLiteral = 2
+    | BooleanLiteral = 3
+    | FieldReference = 4
+    | SelfReference = 5
+    | VariableReference = 6
+    | ObjectCreation = 7
+    | NullLiteral = 8
+
+    let StringDelimeters = [|
         '"'
     |]
+
+    let FunctionOpen = '{'
+
+    let FunctionClose = '}'
+
+    let StatementEnd = ';'
+
+    let ExpressionEnd = ','
+
+    let ParameterSeparator = '|'
+
+
 
 

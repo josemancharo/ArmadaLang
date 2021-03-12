@@ -8,6 +8,7 @@
   <ItemGroup>
     <Compile Include="Tokens.fs" />
     <Compile Include="TokenMatcher.fs" />
+    <Compile Include="CodeTransformer.fs" />
   </ItemGroup>
 
   <ItemGroup>

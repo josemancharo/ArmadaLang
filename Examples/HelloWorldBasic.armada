@@ -1,4 +1,14 @@
 namespace ArmadaApp1;
 
-let hello = "Hello World";
-writeln @hello;
+apply System;
+
+class Program;
+
+#entrypoint 
+fn Main {
+    let one = 1,
+    let hello = "Hello World",
+    writeln @hello,
+    writeln @one
+}
+

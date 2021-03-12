@@ -1,4 +1,5 @@
 ﻿using System;
+using ArmadaLang.Compiler;
 
 namespace ArmadaLang
 {
@@ -6,7 +7,7 @@ namespace ArmadaLang
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            ArmadaCompiler.CompileExeFromArmadaFile(args[0]);
         }
     }
 }

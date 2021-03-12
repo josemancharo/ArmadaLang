@@ -1,39 +1,69 @@
-﻿using System;
+﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.Emit;
+using Microsoft.CSharp;
+using System;
 using System.CodeDom;
 using System.CodeDom.Compiler;
+using System.Collections.Generic;
+using System.Diagnostics;
+using System.IO;
+using System.Linq;
 
 namespace ArmadaLang.Compiler
 {
-    public class ArmadaCompiler : ICodeCompiler
+    public class ArmadaCompiler 
     {
-        public CompilerResults CompileAssemblyFromDom(CompilerParameters options, CodeCompileUnit compilationUnit)
+        public static CodeCompileUnit CompileCodeDomFromFile(string fileName)
         {
-            throw new NotImplementedException();
+            ArmadaParser parser = new();
+            using var file = File.OpenRead(fileName);
+            using StreamReader fileReader = new(file);
+            var codeDom = parser.Parse(fileReader);
+            return codeDom;
         }
 
-        public CompilerResults CompileAssemblyFromDomBatch(CompilerParameters options, CodeCompileUnit[] compilationUnits)
+        public static string GenerateCSharpCodeFromCodeDom(CodeCompileUnit codeDom)
         {
-            throw new NotImplementedException();
+            using var csharpWriter = new StringWriter();
+            CodeGeneratorOptions options = new()
+            {
+                ElseOnClosing = true,
+                BracingStyle = "C",
+            };
+            CSharpCodeProvider csp = new();
+
+            csp.GenerateCodeFromCompileUnit(codeDom, csharpWriter, options);
+            var csharpCode = csharpWriter.GetStringBuilder().ToString();
+            return csharpCode;
         }
 
-        public CompilerResults CompileAssemblyFromFile(CompilerParameters options, string fileName)
+        public static void CompileExeFromArmadaFile(string fileName)
         {
-            throw new NotImplementedException();
-        }
+            var codeDom = CompileCodeDomFromFile(fileName);
+            var csharpCode = GenerateCSharpCodeFromCodeDom(codeDom);
 
-        public CompilerResults CompileAssemblyFromFileBatch(CompilerParameters options, string[] fileNames)
-        {
-            throw new NotImplementedException();
-        }
+            var assemblyPath = Path.GetDirectoryName(typeof(object).Assembly.Location);
 
-        public CompilerResults CompileAssemblyFromSource(CompilerParameters options, string source)
-        {
-            throw new NotImplementedException();
-        }
+            var references = new List<MetadataReference>
+            {
+                MetadataReference.CreateFromFile(typeof(object).Assembly.Location),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Private.CoreLib.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Console.dll")),
+                MetadataReference.CreateFromFile(Path.Combine(assemblyPath, "System.Runtime.dll"))
+            };
 
-        public CompilerResults CompileAssemblyFromSourceBatch(CompilerParameters options, string[] sources)
-        {
-            throw new NotImplementedException();
+            SyntaxTree syntaxTree = CSharpSyntaxTree.ParseText(csharpCode);
+            CSharpCompilation csc = CSharpCompilation.Create(
+                codeDom.Namespaces[0].Name,
+                new[] { syntaxTree },
+                references,
+                options: new CSharpCompilationOptions(OutputKind.ConsoleApplication)
+             );
+
+            EmitResult result = csc.Emit($@"C:\Users\josem\Downloads\{codeDom.Namespaces[0].Name}\{codeDom.Namespaces[0].Name}.exe");
+
+            Console.WriteLine($"Finished. Success: {result.Success};");
         }
     }
 }
